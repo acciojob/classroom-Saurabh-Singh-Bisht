@@ -61,16 +61,16 @@ public class StudentService {
 
     public void deleteTeacherByName(String teacher) {
         List<String> studentList = getStudentByTeacher(teacher);
-        studentRepository.deleteTeacher(teacher);
         for(String stud: studentList){
             studentRepository.deleteStudent(stud);
         }
+        studentRepository.deleteTeacher(teacher);
     }
 
     public void deleteAllTeachers() {
         List<String> teachersList = studentRepository.getAllTeachers();
         for(String teach: teachersList){
-            studentRepository.deleteTeacher(teach);
+            deleteTeacherByName(teach);
         }
     }
 }

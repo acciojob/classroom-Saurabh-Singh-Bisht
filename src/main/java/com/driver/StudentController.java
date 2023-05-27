@@ -1,6 +1,7 @@
 package com.driver;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,16 +41,22 @@ public class StudentController {
 
     @GetMapping("/get-student-by-name/{name}")
     public ResponseEntity<Student> getStudentByName(@PathVariable String name){
-        Student student = studentService.getStudentByName(name); // Assign student by calling service layer method
-
-        return new ResponseEntity<>(student, HttpStatus.CREATED);
+        try {
+            Student student = studentService.getStudentByName(name);
+            // Assign student by calling service layer method
+            return new ResponseEntity<>(student, HttpStatus.CREATED);
+        } catch(StudentNotFoundException ex) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/get-teacher-by-name/{name}")
     public ResponseEntity<Teacher> getTeacherByName(@PathVariable String name){
         Teacher teacher = studentService.getTeacherByName(name); // Assign student by calling service layer method
-
-        return new ResponseEntity<>(teacher, HttpStatus.CREATED);
+        if(Objects.nonNull(teacher)){
+            return new ResponseEntity<>(teacher, HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(null, HttpStatus.CREATED);
     }
 
     @GetMapping("/get-students-by-teacher-name/{teacher}")
